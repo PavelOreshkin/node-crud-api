@@ -1,0 +1,24 @@
+{
+  "name": "node-crud-api",
+  "version": "1.0.0",
+  "description": "This repository is the part of nodejs-assignments https://github.com/AlreadyBored/nodejs-assignments",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PavelOreshkin/node-file-manager"
+  },
+  "keywords": [
+    "nodejs",
+    "assignments",
+    "crud-api"
+  ],
+  "author": "PavelOreshkin",
+  "license": "MIT",
+  "homepage": "https://github.com/PavelOreshkin/node-file-manager#readme"
+}
