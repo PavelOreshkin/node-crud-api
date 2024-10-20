@@ -7,10 +7,14 @@ type User = {
   hobbies: string[] | [];
 };
 
-const users: User[] = [];
+let users: User[] = [];
 
 export const getUsers = () => {
   return users;
+};
+
+export const resetDatabase = () => {
+  users = [];
 };
 
 export const getUserById = (id: string) => {
@@ -32,5 +36,9 @@ export const updateUser = (userId: string, data: Omit<User, "id">) => {
 
 export const deleteUser = (id: string) => {
   const userIndex = users.findIndex((user) => user.id === id);
-  users.splice(userIndex, 1);
+  if (userIndex !== -1) {
+    users.splice(userIndex, 1);
+    return true;
+  }
+  return false;
 };
