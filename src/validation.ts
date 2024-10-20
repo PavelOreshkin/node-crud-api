@@ -1,5 +1,5 @@
 import { validate as isValidUuid } from "uuid";
-import { getUserById } from "./userApi";
+import { getUserById, User } from "./userApi";
 
 export const checkUserId = (userId?: string) => {
   if (!userId) {
@@ -19,7 +19,11 @@ export const checkUserExist = (userId: string) => {
   return null;
 };
 
-export const checkRequiredFields = ({ username, age, hobbies }: any) => {
+export const checkRequiredFields = ({
+  username,
+  age,
+  hobbies,
+}: Omit<User, "id">) => {
   if (!username || !age || !hobbies) {
     const unfilledFields = [
       !username ? "username" : null,

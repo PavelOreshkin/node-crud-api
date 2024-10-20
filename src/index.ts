@@ -1,13 +1,15 @@
-import * as dotenv from "dotenv";
-import http from "http";
+import { env } from "node:process";
+import { createServer } from "node:http";
+import { config as dotenvConfig } from "dotenv";
 import { routes } from "./routes";
 
-dotenv.config();
+dotenvConfig();
+const PORT = Number(env.PORT);
+if (!PORT) {
+  console.warn(`pleas add PORT variable to .env file`);
+  process.exit(0);
+}
 
-const PORT = process.env.PORT || 3000;
-
-const server = http.createServer(routes);
-
-server.listen(PORT, () => {
+createServer(routes).listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

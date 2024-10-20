@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-type User = {
+export type User = {
   id: string;
   username: string;
   age: number;
