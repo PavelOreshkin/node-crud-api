@@ -15,7 +15,7 @@ export const routes = async (req: IncomingMessage, res: ServerResponse) => {
     if (req.method === "GET" && req.url === "/api/users") {
       const users = getUsers();
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(users);
+      res.end(JSON.stringify(users));
       return;
     }
 

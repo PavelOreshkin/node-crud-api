@@ -6,8 +6,10 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "dev2": "ts-node src/index.ts"
+    "start:dev": "ts-node-dev --respawn src/index.ts",
+    "start:prod": "npm run build && npm run run_bundle",
+    "build": "tsc",
+    "run_bundle": "node dist/index.js"
   },
   "repository": {
     "type": "git",
