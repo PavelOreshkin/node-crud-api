@@ -5,9 +5,9 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev2": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,25 @@
   ],
   "author": "PavelOreshkin",
   "license": "MIT",
-  "homepage": "https://github.com/PavelOreshkin/node-file-manager#readme"
+  "homepage": "https://github.com/PavelOreshkin/node-file-manager#readme",
+  "devDependencies": {
+    "@types/node": "^22.7.7",
+    "@types/uuid": "^10.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "uuid": "^10.0.0"
+  }
 }
