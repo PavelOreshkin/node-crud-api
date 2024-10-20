@@ -6,86 +6,111 @@ import {
   updateUser,
   deleteUser,
 } from "./userApi";
-
-const parseBody = async (req: IncomingMessage) => {
-  let body = "";
-  await req.on("data", (chunk) => (body += chunk));
-  return JSON.parse(body);
-};
+import { checkRequiredFields, checkUserExist, checkUserId } from "./validation";
+import { findUserIdByUrl, parseBody } from "./utils";
 
 export const routes = async (req: IncomingMessage, res: ServerResponse) => {
-  console.log("req.url: ", req.url);
-  console.log("req.method: ", req.method);
-
   // GET ALL
   if (req.method === "GET" && req.url === "/api/users") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(getUsers()));
+    return;
   }
 
   // GET ONE
   if (req.method === "GET" && req.url?.startsWith("/api/users/")) {
-    const userId = req.url.split("/")[3];
-    console.log("userId: ", userId);
+    const userId = findUserIdByUrl(req.url);
+
+    const userIdErrorMessage = checkUserId(userId);
+    if (userIdErrorMessage) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: userIdErrorMessage }));
+      return;
+    }
+
+    const userExistErrorMessage = checkUserExist(userId as string);
+    if (userExistErrorMessage) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: userExistErrorMessage }));
+      return;
+    }
+
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(getUserById(userId)));
+    res.end(JSON.stringify(getUserById(userId as string)));
+    return;
   }
 
   // CREATE
   if (req.method === "POST" && req.url === "/api/users") {
     const body = await parseBody(req);
-    const { username, age, hobbies } = body || {};
-    if (!username || !age || !hobbies) {
-      const unfilledFields = [
-        !username ? "username" : null,
-        !age ? "age" : null,
-        !hobbies ? "hobbies" : null,
-      ]
-        .filter((item) => item)
-        .join(", ");
 
+    const errorMessage = checkRequiredFields(body);
+
+    if (errorMessage) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(
-        JSON.stringify({
-          error: `You have to add next fields: ${unfilledFields}`,
-        })
-      );
+      res.end(JSON.stringify({ error: errorMessage }));
+      return;
     }
+
     res.writeHead(201, { "Content-Type": "application/json" });
     res.end(JSON.stringify(createUser(body)));
+    return;
   }
 
   // UPDATE
   if (req.method === "PUT" && req.url?.startsWith("/api/users/")) {
-    const userId = req.url.split("/")[3];
+    const userId = findUserIdByUrl(req.url);
     const body = await parseBody(req);
-    const { username, age, hobbies } = body || {};
-    if (!username || !age || !hobbies) {
-      const unfilledFields = [
-        !username ? "username" : null,
-        !age ? "age" : null,
-        !hobbies ? "hobbies" : null,
-      ]
-        .filter((item) => item)
-        .join(", ");
 
+    const userIdErrorMessage = checkUserId(userId);
+    const requiredFieldsErrorMessage = checkRequiredFields(body);
+    const badRequestErrorMessage =
+      userIdErrorMessage || requiredFieldsErrorMessage;
+    if (badRequestErrorMessage) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(
-        JSON.stringify({
-          error: `You have to add next fields: ${unfilledFields}`,
-        })
-      );
+      res.end(JSON.stringify({ error: badRequestErrorMessage }));
+      return;
     }
+
+    const userExistErrorMessage = checkUserExist(userId as string);
+    if (userExistErrorMessage) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: userExistErrorMessage }));
+      return;
+    }
+
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(updateUser(userId, body)));
+    res.end(JSON.stringify(updateUser(userId as string, body)));
+    return;
   }
 
   // DELETE
   if (req.method === "DELETE" && req.url?.startsWith("/api/users/")) {
-    const userId = req.url.split("/")[3];
+    const userId = findUserIdByUrl(req.url);
 
-    res.writeHead(204, { "Content-Type": "application/json" });
-    deleteUser(userId);
+    const userIdErrorMessage = checkUserId(userId);
+    if (userIdErrorMessage) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: userIdErrorMessage }));
+    }
+
+    const userExistErrorMessage = checkUserExist(userId as string);
+    if (userExistErrorMessage) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: userExistErrorMessage }));
+      return;
+    }
+
+    deleteUser(userId as string);
+    res.writeHead(204);
     res.end();
+    return;
   }
+
+  res.writeHead(404, { "Content-Type": "application/json" });
+  res.end(
+    JSON.stringify({
+      error: "wrong request, make sure that you send request correctly",
+    })
+  );
 };
