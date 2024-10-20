@@ -9,7 +9,6 @@ export const parseBody = async (req: IncomingMessage) => {
 export const findUserIdByUrl = (url?: string) => {
   if (!url) return undefined;
   const splittedUrl = url.split("/");
-  console.log("splittedUrl: ", splittedUrl);
   if (splittedUrl.length < 4) return undefined;
   return splittedUrl[3];
 };
