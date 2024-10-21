@@ -4,11 +4,7 @@ import { config as dotenvConfig } from "dotenv";
 import { routes } from "./routes";
 
 dotenvConfig();
-const PORT = Number(env.PORT);
-if (!PORT) {
-  console.warn(`pleas add PORT variable to .env file`);
-  process.exit(0);
-}
+const PORT = Number(env.PORT) || 4000;
 
 createServer(routes).listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
