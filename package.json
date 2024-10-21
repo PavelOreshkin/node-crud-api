@@ -7,10 +7,8 @@
   },
   "scripts": {
     "start:dev": "ts-node-dev --respawn src/index.ts",
-    "start:prod": "npm run build && npm run run_bundle",
+    "start:prod": "webpack && node dist/bundle.js",
     "start:multi": "ts-node-dev --respawn src/multi.ts",
-    "build": "webpack",
-    "run_bundle": "node dist/bundle.js",
     "test": "jest"
   },
   "repository": {

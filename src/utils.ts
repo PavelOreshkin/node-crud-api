@@ -12,3 +12,17 @@ export const findUserIdByUrl = (url?: string) => {
   if (splittedUrl.length < 4) return undefined;
   return splittedUrl[3];
 };
+
+export const createPortGenerator = (port: number, workersAmount: number) => {
+  let currentPort = port;
+  const maxPort = port + workersAmount;
+
+  return () => {
+    if (currentPort === maxPort) {
+      currentPort = port;
+    }
+
+    currentPort++;
+    return currentPort;
+  };
+};
